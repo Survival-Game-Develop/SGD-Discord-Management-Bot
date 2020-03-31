@@ -20,8 +20,7 @@ Bot Codes
 
 class SGD_Bot(commands.Bot):
     # Bot Config Variables
-    guild_configs: dict = {}
-    translations: dict = {}
+    guild_config: dict = {}
     do_reboot: bool = False
     dev_ids: list = [280855156608860160]
 
@@ -33,14 +32,14 @@ class SGD_Bot(commands.Bot):
 
     def __init__(self, *args, **kwargs):
         # Bot Config Variables
-        self.guild_configs: dict = {}
-        self.translations: dict = {}
-        self.dev_ids: list = [280855156608860160]
+        self.guild_config: dict = {}
         self.do_reboot: bool = False
         self.logger: logging.Logger = None
 
+        self.dev_ids: list = [280855156608860160]
+
         # Bot Information values
-        self.official_community_invite: str = "https://discord.gg/ks5m5HE"
+        self.initial_color: discord.Colour = discord.Colour.dark_red()
         super().__init__(*args, **kwargs)
 
     """
@@ -79,20 +78,9 @@ class SGD_Bot(commands.Bot):
             print(f"[init] > Exception Value : {e}")
 
         # Load server_configs/{guild.name}_config.json
-        files: list = os.listdir("./server_configs")
-        server_config_files: list = []
-        for server_config_file in files:
-            if "_config.json" in server_config_file:
-                server_config_files.append(server_config_file)
-            else:
-                continue
+        with open(file="./guild_config.json", mode="rt", encoding="utf-8") as guild_config_file:
+            self.guild_config = json.load(fp=guild_config_file)
 
-        for config_filedir in server_config_files:
-            with open(
-                    file=f"server_configs/{config_filedir}", mode="rt", encoding="utf-8"
-            ) as config_file:
-                config: dict = json.load(fp=config_file)
-                self.guild_configs[config["guild"]["name"]] = config
 
         # Load Cogs(Extensions)
         for filename in os.listdir("./cogs"):
@@ -128,13 +116,8 @@ class SGD_Bot(commands.Bot):
             print(f"[save_datas] > {config_file_name}를 저장했습니다!")
 
         # 서버별 설정파일 저장
-        for config in self.guild_configs:
-            with open(
-                    file=f'./server_configs/{config["guild_name"]}_config.json',
-                    mode="wt",
-                    encoding="utf-8",
-            ) as config_file:
-                json.dump(obj=config, fp=config_file)
+        with open(file="./guild_config.json", mode="wt", encoding="utf-8") as guild_config_file:
+            json.dump(obj=self.guild_config, fp=guild_config_file)
 
         # 만약 봇이 꺼지면서 실행된것이 아닌, 명령어로 실행된 경우라면 init() 함수를 사용해 설정을 다시 불러온다.
         if not bot.is_closed():

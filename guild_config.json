@@ -1,0 +1,17 @@
+{
+  "guild_name": "Survival Game Develop",
+  "guild_id": "",
+  "modules": {
+    "meeting": {
+      "ch_ids": {
+        "conclusion": 0,
+        "on_meeting_chs": [0]
+      }
+    },
+    "management": {
+      "ch_ids": {
+        "log": 0
+      }
+    }
+  }
+}

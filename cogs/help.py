@@ -33,8 +33,7 @@ class Help(commands.Cog):
         help_embed = discord.Embed(
             title='라테봇',
             description='봇 도움말',
-            # 루미너스 브론드        [R236/G202/B179]
-            color=self.bot.latte_color
+            color=self.bot.initial_color
         )
         help_embed.set_thumbnail(url=self.bot.user.avatar_url)
         help_embed.set_footer(
